@@ -33,14 +33,13 @@ double getValueOfTaylorSeries(int n);
 
 int main() {
     createTwoChildProcesses();
-//    calcualteTaylorSeries();
+    calcualteTaylorSeries();
     return 0;
 }
 
 // MARK: - y[i] = sin(2*PI*i/N) - Individual task (Second part)
 void calcualteTaylorSeries() {
     int numOfSeries, n = 0;
-    double x;
     
     printf("Enter n: ");
     scanf("%d", &numOfSeries);
@@ -48,8 +47,8 @@ void calcualteTaylorSeries() {
     scanf("%d", &n);
     printf("%d\n\n", getpid());
     
+    double x, y[n];
     FILE *file;
-    double y[n];
     file = fopen(fileResultPath, "w");
     fclose(file);
     
@@ -82,11 +81,10 @@ double getValueOfTaylorSeries(int n) {
 
 void getResult(double x, int numOfSeries) {
     FILE *file;
-    printf("\n x = %f", x);
+    printf("\nx = %f", x);
     int denominator = 1;
     for (int i = 0; i < numOfSeries; i++) {
         int status = 0;
-        fflush (stdout);
         pid_t pid = fork();
         if(pid == 0) {
             file = fopen(filePath, "a+");
@@ -115,7 +113,6 @@ double factorial(int number) {
 //  MARK: - Fisrt part
 void createTwoChildProcesses() {
     long int countTicks;
-    
     for (int kid = 0; kid < 2; kid++) {
         int pid = fork();
         if(pid < 0){
