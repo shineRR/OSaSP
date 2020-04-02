@@ -13,6 +13,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <stdbool.h>
 
 #define PI 3.141592653589793238
 #define filePath "/Users/shine/Desktop/outputTaylor.txt"
@@ -29,7 +30,7 @@ void calcualteTaylorSeries(void);
 void getResult(double x, int numOfSeries);
 double factorial(int number);
 double getValueOfTaylorSeries(int n);
-
+bool validateVariables(int numOfSeries, int n);
 
 int main() {
     createTwoChildProcesses();
@@ -40,12 +41,12 @@ int main() {
 // MARK: - y[i] = sin(2*PI*i/N) - Individual task (Second part)
 void calcualteTaylorSeries() {
     int numOfSeries, n = 0;
-    
+    do {
     printf("Enter n: ");
     scanf("%d", &numOfSeries);
     printf("Enter N: ");
     scanf("%d", &n);
-    printf("%d\n\n", getpid());
+    } while (!validateVariables(numOfSeries, n));
     
     double x, y[n];
     FILE *file;
@@ -100,6 +101,10 @@ void getResult(double x, int numOfSeries) {
         }
         wait(&status);
     }
+}
+
+bool validateVariables(int numOfSeries, int n) {
+    return (numOfSeries > 0) && (n > 0) ? true : false;
 }
 
 double factorial(int number) {
