@@ -34,7 +34,7 @@ bool validateVariables(int numOfSeries, int n);
 
 int main() {
     createTwoChildProcesses();
-    calcualteTaylorSeries();
+//    calcualteTaylorSeries();
     return 0;
 }
 
@@ -49,7 +49,7 @@ void calcualteTaylorSeries() {
     } while (!validateVariables(numOfSeries, n));
     
     double x, y[n];
-    FILE *file;
+    FILE *file = NULL;
     file = fopen(fileResultPath, "w");
     fclose(file);
     
@@ -81,13 +81,13 @@ double getValueOfTaylorSeries(int n) {
 }
 
 void getResult(double x, int numOfSeries) {
-    FILE *file;
+    FILE *file = NULL;
     printf("\nx = %f", x);
     int denominator = 1;
     for (int i = 0; i < numOfSeries; i++) {
-        int status = 0;
         pid_t pid = fork();
         if(pid == 0) {
+            /* Child process */
             file = fopen(filePath, "a+");
             double tmp = (i % 2 == 1) ? (-1 * pow(x, denominator) / factorial(denominator)) : pow(x, denominator) / factorial(denominator);
             printf("\n%d. Value of seria = %f, childpid = %ld, parentpid = %ld", i, tmp, (long)getpid(), (long)getppid());
@@ -96,10 +96,10 @@ void getResult(double x, int numOfSeries) {
             exit(0);
         } else {
             /* Parent process */
-            waitpid(pid, &status, 0);
+            waitpid(pid, NULL, 0);
             denominator += 2;
         }
-        wait(&status);
+        wait(NULL);
     }
 }
 
@@ -120,28 +120,25 @@ void createTwoChildProcesses() {
     long int countTicks;
     for (int kid = 0; kid < 2; kid++) {
         int pid = fork();
-        if(pid < 0){
+        if(pid < 0) {
+            printf("Error!");
             exit(1);
         }
-        else if (pid > 0){
+        else if (pid > 0) {
             /* Parent process */
             countTicks = time (NULL);
-            printf("Current time: %s",ctime (&countTicks));
+            printf("Current time: %s", ctime (&countTicks));
             printf("Parent pid=%d\n\n", getpid());
         }
         else {
             /* Child process */
+            waitpid(pid, NULL, 0);
             countTicks = time (NULL);
-            printf("Current time: %s",ctime (&countTicks) );
+            printf("Current time: %s", ctime (&countTicks) );
             printf("Child pid = %d, Parent pid = %d\n\n", getpid(), getppid());
             exit(0);
         }
     }
     
     system("ps -x");
-
-    for (int kid = 0; kid < 3; ++kid) {
-        int status;
-        wait(&status); // kids could be ready in any order
-    }
 }
