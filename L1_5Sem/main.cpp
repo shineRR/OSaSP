@@ -1,15 +1,14 @@
 #include <windows.h>
 #include <gdiplus.h>
 
-using namespace Gdiplus;
-
 #define TIMER_SECOND 1
 
-SIZE MIN_WINDOW_SIZE = {300,200};
-int MOVE_DISTANCE = 12;
-POINTFLOAT modifierDirection = {1.0, 1.0};
-int RECT_SIZE = 150;
-RECT rect = {0, 0, RECT_SIZE, RECT_SIZE};
+const SIZE MIN_WINDOW_SIZE = {300,200};
+const int MOVE_DISTANCE = 12;
+const int RECT_SIZE = 150;
+
+static POINTFLOAT modifierDirection = {1.0, 1.0};
+static RECT rect = {0, 0, RECT_SIZE, RECT_SIZE};
 
 void updateRectValues(RECT &rectToChange, int horizontalPx, int verticalPx) {
     rectToChange.left += horizontalPx;
@@ -37,9 +36,9 @@ void paintObj(HWND hWnd, int horizontalPx, int verticalPx) {
 
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hWnd, &ps);
-    Graphics graphics(hdc);
-    Image image(L"C:\\Users\\shine\\Desktop\\Dev\\OSaSP\\L1_5Sem\\Assets\\apple.png");
-    Rect destRect(rect.left, rect.top, RECT_SIZE, RECT_SIZE);
+    Gdiplus::Graphics graphics(hdc);
+    Gdiplus::Image image(L"C:\\Users\\shine\\Desktop\\Dev\\OSaSP\\L1_5Sem\\Assets\\apple.png");
+    Gdiplus::Rect destRect(rect.left, rect.top, RECT_SIZE, RECT_SIZE);
     graphics.DrawImage(&image, destRect);
     SelectObject(hdc, GetStockObject(DC_BRUSH));
     EndPaint(hWnd, &ps);
@@ -171,7 +170,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
-    GdiplusStartupInput gdiplusStartupInput;
+    Gdiplus::GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR gdiplusToken;
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
     WNDCLASSEX wcex; HWND hWnd; MSG msg;
@@ -198,6 +197,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-    GdiplusShutdown(gdiplusToken);
+    Gdiplus::GdiplusShutdown(gdiplusToken);
     return (int)msg.wParam;
 }
