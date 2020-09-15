@@ -5,5 +5,5 @@ Write a program to find an array of N consecutive values of the function y [i] =
 # 2. Event architect for Windows applications, message handling mechanism, window redrawing mechanism. (L1_5Sem)
 - Develop a program that allows you to move a sprite (colored rectangle or ellipse) inside the working area of the window using the keyboard and mouse.
 - Make the mouse wheel work. Scrolling moves the sprite vertically. With the Shift key held down, scrolling the wheel moves the sprite horizontally.
-- Replace the sprite with a picture with a non-rectangular outline.
+- Replace the sprite with a picture with a non-rectangular border.
 - Give the sprite a movement with a bounce from the borders of the window.
