@@ -4,7 +4,7 @@
 #define TIMER_SECOND 1
 
 const SIZE MIN_WINDOW_SIZE = {300,200};
-const int MOVE_DISTANCE = 12;
+const int MOVE_DISTANCE = 4;
 const int RECT_SIZE = 150;
 
 static POINTFLOAT modifierDirection = {1.0, 1.0};
@@ -32,15 +32,30 @@ void paintObj(HWND hWnd, int horizontalPx, int verticalPx) {
     if(!GetClientRect(hWnd, &windowRect))
         GetLastError();
     if (!calculateBorders(windowRect, horizontalPx, verticalPx)) return;
-    InvalidateRect(hWnd, nullptr, TRUE);
+    InvalidateRect(hWnd, nullptr, FALSE);
+
+    int left = windowRect.left;
+    int top = windowRect.top;
+    int width = windowRect.right - windowRect.left;
+    int height = windowRect.bottom - windowRect.top;
 
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hWnd, &ps);
-    Gdiplus::Graphics graphics(hdc);
-    Gdiplus::Image image(L"C:\\Users\\shine\\Desktop\\Dev\\OSaSP\\L1_5Sem\\Assets\\apple.png");
+    HDC  memDC = CreateCompatibleDC(hdc);
+
+    HBITMAP hBM = CreateCompatibleBitmap(hdc, width, height);
+    HBITMAP  oldbmp = (HBITMAP)SelectObject(memDC, hBM);
+
+    Gdiplus::Graphics graphics(memDC);
     Gdiplus::Rect destRect(rect.left, rect.top, RECT_SIZE, RECT_SIZE);
+    static Gdiplus::Image image(L"C:\\Users\\shine\\Desktop\\Dev\\OSaSP\\L1_5Sem\\Assets\\apple.png");
     graphics.DrawImage(&image, destRect);
-    SelectObject(hdc, GetStockObject(DC_BRUSH));
+
+    BitBlt(hdc, left, top, width, height, memDC, left, top, SRCCOPY);
+    SelectObject(memDC, oldbmp);
+    DeleteObject(hBM);
+    DeleteDC(memDC);
+
     EndPaint(hWnd, &ps);
 }
 
@@ -138,7 +153,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case WM_CREATE:
-            SetTimer(hWnd, TIMER_SECOND, 200, NULL);
+            SetTimer(hWnd, TIMER_SECOND, 10, NULL);
             break;
         case WM_GETMINMAXINFO: {
             updateRectPos(hWnd);
