@@ -48,7 +48,7 @@ void paintObj(HWND hWnd, int horizontalPx, int verticalPx) {
 
     Gdiplus::Graphics graphics(memDC);
     Gdiplus::Rect destRect(rect.left, rect.top, RECT_SIZE, RECT_SIZE);
-    static Gdiplus::Image image(L"C:\\Users\\shine\\Desktop\\Dev\\OSaSP\\L1_5Sem\\Assets\\apple.png");
+    Gdiplus::Image image(L"C:\\Users\\shine\\Desktop\\OSaSP\\L1_5Sem\\Assets\\apple.png");
     graphics.DrawImage(&image, destRect);
 
     BitBlt(hdc, left, top, width, height, memDC, left, top, SRCCOPY);
@@ -81,6 +81,9 @@ void iconMovement(HWND hWnd) {
     } else if (rect.left + xDistance < windowRect.left && rect.top + yDistance >= windowRect.top &&
                modifierDirection.x < 0) {
         modifierDirection.x *= -1.0;
+    } else if (rect.top + yDistance < windowRect.top  && rect.left + xDistance < windowRect.left &&
+              modifierDirection.y < 0) {
+        modifierDirection.y *= -1.0;
     }
     paintObj(hWnd,MOVE_DISTANCE * modifierDirection.x, MOVE_DISTANCE * modifierDirection.y);
 }
