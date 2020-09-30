@@ -193,7 +193,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
     WNDCLASSEX wcex; HWND hWnd; MSG msg;
     wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.style = CS_DBLCLKS;
     wcex.lpfnWndProc = WndProc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
