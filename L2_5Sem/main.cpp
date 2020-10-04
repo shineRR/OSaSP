@@ -1,45 +1,44 @@
 #include <windows.h>
-#include <iostream>
 
 #define COLUMNS 5
-#define ROWS 5
+#define ROWS 6
 
 const SIZE MIN_WINDOW_SIZE = {150,200};
-RECT rect;
-int hSize, vSize;
+const LPCSTR arrayText[ROWS][COLUMNS] = {"As ", "collected", "deficient", "objection", "by ",
+                                {"it", "discovery", "sincerity" ,"curiosity" ,"Quiet"},
+                                {"decay ", "who", "round", "three", "world"},
+                                {"whole", "has", "mrs", "man", "Built"},
+                                {"the", "china", "there", "tried", "jokes "},
+                                {"New", "Object", "Try", "It", "Now"}};
 
-const LPCSTR arrayText[5][5] = {"As ", "collected", "deficient", "objection", "by ",
-                           {"it", "discovery", "sincerity" ,"curiosity" ,"Quiet"},
-                           {"decay ", "who", "round", "three", "world"},
-                           {"whole", "has", "mrs", "man", "Built"},
-                           {"the", "china", "there", "tried", "jokes "}};
+RECT windowRect = {0, 0, 0, 0};
+int hSize = 0, vSize = 0;
 
 void drawVBorders(HDC hdc) {
-    for (int i = 0; i < COLUMNS; i++) {
+    for (int i = 0; i < ROWS; i++) {
         MoveToEx(hdc, i * hSize, 0, NULL);
-        LineTo(hdc, i * hSize, rect.bottom);
+        LineTo(hdc, i * hSize, windowRect.bottom);
     }
 }
 
 void drawHBorder(HDC hdc, int rowOffset) {
     MoveToEx(hdc, 0, rowOffset, NULL);
-    LineTo(hdc, rect.right, rowOffset);
+    LineTo(hdc, windowRect.right, rowOffset);
 }
 
 void drawTable(HWND hWnd) {
     HDC hdc = GetDC(hWnd);
-    vSize = (rect.bottom - rect.top) / COLUMNS;
-    hSize = (rect.right - rect.left) / ROWS;
+    vSize = (windowRect.bottom - windowRect.top) / COLUMNS;
+    hSize = (windowRect.right - windowRect.left) / ROWS;
     drawVBorders(hdc);
     int offset = 2;
     int rowOffset = 0;
     for (int i = 0; i < COLUMNS; i++) {
         int maxTextHeight = vSize;
-        for (int j = 0; j < COLUMNS; j++) {
-            LPCSTR text = arrayText[i][j];
+        for (int j = 0; j < ROWS; j++) {
+            LPCSTR text = arrayText[j][i];
             RECT gridRect = {j * hSize + offset, i * vSize + rowOffset, (j + 1) * hSize, (i + 1) * vSize + rowOffset};
             int textHeight = DrawTextA(hdc, text, strlen(text), &gridRect, DT_WORDBREAK | DT_NOCLIP | DT_EDITCONTROL);
-            std::cout << textHeight;
             if (textHeight > maxTextHeight)
                 maxTextHeight = textHeight;
         }
@@ -52,17 +51,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     PAINTSTRUCT ps;
     switch (message) {
-        case WM_CREATE:
-            break;
         case WM_GETMINMAXINFO: {
             LPMINMAXINFO lpMMI = (LPMINMAXINFO) lParam;
             lpMMI->ptMinTrackSize.x = MIN_WINDOW_SIZE.cx;
             lpMMI->ptMinTrackSize.y = MIN_WINDOW_SIZE.cy;
-            GetClientRect(hWnd, &rect);
+            GetClientRect(hWnd, &windowRect);
             break;
         }
         case WM_PAINT: {
-            GetClientRect(hWnd, &rect);
+            GetClientRect(hWnd, &windowRect);
             BeginPaint(hWnd, &ps);
             drawTable(hWnd);
             EndPaint(hWnd, &ps);
