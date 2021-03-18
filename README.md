@@ -7,3 +7,8 @@ Write a program to find an array of N consecutive values of the function y [i] =
 - Make the mouse wheel work. Scrolling moves the sprite vertically. With the Shift key held down, scrolling the wheel moves the sprite horizontally.
 - Replace the sprite with a picture with a non-rectangular border.
 - Give the sprite a movement with a bounce from the borders of the window.
+
+#3. Exploring the output of text and fonts.
+Develop a program that writes a text table (N rows by M columns) into the window in such a way that all the columns of the table are evenly
+are distributed to the width of the window, and the height of the table rows is selected so as to accommodate the text of each cell.
+- When resizing the window, the table is recalculated and redrawn.
